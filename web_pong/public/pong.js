@@ -4,16 +4,30 @@ const canvas = document.getElementById("pong");
 // getContext of canvas = methods and properties to draw and do a lot of thing to the canvas
 const ctx = canvas.getContext('2d');
 
+//Firebase data - players' positions
+let player1Aceleration = firebase.database().ref("Pong").child("Player1").child("aceleration");
+let player2Aceleration = firebase.database().ref("Pong").child("Player2").child("aceleration");
+
+let p1a = 1;
+let p2a = 1;
+
+player1Aceleration.on('value', (snap) => {
+  p1a = parseFloat(snap.val());
+});
+
+//info
+let info = document.getElementById("info");
+
 // load sounds
 let hit = new Audio();
 let wall = new Audio();
-let userScore = new Audio();
-let comScore = new Audio();
+let player1Score = new Audio();
+let player2Score = new Audio();
 
 hit.src = "sounds/hit.mp3";
 wall.src = "sounds/wall.mp3";
-comScore.src = "sounds/comScore.mp3";
-userScore.src = "sounds/userScore.mp3";
+player1Score.src = "sounds/comScore.mp3";
+player2Score.src = "sounds/userScore.mp3";
 
 // Ball object
 const ball = {
@@ -23,11 +37,11 @@ const ball = {
     velocityX : 5,
     velocityY : 5,
     speed : 7,
-    color : "WHITE"
+    color : "RED"
 }
 
 // User Paddle
-const user = {
+const player1 = {
     x : 0, // left side of canvas
     y : (canvas.height - 100)/2, // -100 the height of paddle
     width : 10,
@@ -37,7 +51,7 @@ const user = {
 }
 
 // COM Paddle
-const com = {
+const player2 = {
     x : canvas.width - 10, // - width of paddle
     y : (canvas.height - 100)/2, // -100 the height of paddle
     width : 10,
@@ -52,7 +66,7 @@ const net = {
     y : 0,
     height : 10,
     width : 2,
-    color : "WHITE"
+    color : "BLUE"
 }
 
 // draw a rectangle, will be used to draw paddles
@@ -69,15 +83,14 @@ function drawArc(x, y, r, color){
     ctx.closePath();
     ctx.fill();
 }
-
+/*
 // listening to the mouse
-canvas.addEventListener("mousemove", getMousePos);
+canvas.addEventListener("mousemove", getPlayersPos);
 
-function getMousePos(evt){
+function getPlayersPos(){
     let rect = canvas.getBoundingClientRect();
-
-    user.y = evt.clientY - rect.top - user.height/2;
-}
+    player1.y = (p1a * 100) + rect.top - player1.height/2;
+}*/
 
 // when COM or USER scores, we reset the ball
 function resetBall(){
@@ -119,14 +132,17 @@ function collision(b,p){
 // update function, the function that does all calculations
 function update(){
 
+	let rect = canvas.getBoundingClientRect();
+    player1.y = (p1a * 100) + rect.top - player1.height/2;
+
     // change the score of players, if the ball goes to the left "ball.x<0" computer win, else if "ball.x > canvas.width" the user win
     if( ball.x - ball.radius < 0 ){
-        com.score++;
-        comScore.play();
+        player2.score++;
+        player2Score.play();
         resetBall();
     }else if( ball.x + ball.radius > canvas.width){
-        user.score++;
-        userScore.play();
+        player1.score++;
+        player1Score.play();
         resetBall();
     }
 
@@ -136,7 +152,7 @@ function update(){
 
     // computer plays for itself, and we must be able to beat it
     // simple AI
-    com.y += ((ball.y - (com.y + com.height/2)))*0.1;
+    player2.y += ((ball.y - (player2.y + player2.height/2)))*0.1;
 
     // when the ball collides with bottom and top walls we inverse the y velocity.
     if(ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height){
@@ -145,7 +161,7 @@ function update(){
     }
 
     // we check if the paddle hit the user or the com paddle
-    let player = (ball.x + ball.radius < canvas.width/2) ? user : com;
+    let player = (ball.x + ball.radius < canvas.width/2) ? player1 : player2;
 
     // if the ball hits a paddle
     if(collision(ball,player)){
@@ -180,19 +196,19 @@ function render(){
     drawRect(0, 0, canvas.width, canvas.height, "#000");
 
     // draw the user score to the left
-    drawText(user.score,canvas.width/4,canvas.height/5);
+    drawText(player1.score,canvas.width/4,canvas.height/5);
 
     // draw the COM score to the right
-    drawText(com.score,3*canvas.width/4,canvas.height/5);
+    drawText(player2.score,3*canvas.width/4,canvas.height/5);
 
     // draw the net
     drawNet();
 
     // draw the user's paddle
-    drawRect(user.x, user.y, user.width, user.height, user.color);
+    drawRect(player1.x, player1.y, player1.width, player1.height, player1.color);
 
     // draw the COM's paddle
-    drawRect(com.x, com.y, com.width, com.height, com.color);
+    drawRect(player2.x, player2.y, player2.width, player2.height, player2.color);
 
     // draw the ball
     drawArc(ball.x, ball.y, ball.radius, ball.color);
@@ -200,6 +216,7 @@ function render(){
 function game(){
     update();
     render();
+    info.innerHTML = `Player 1: ${p1a}`;
 }
 // number of frames per second
 let framePerSecond = 50;

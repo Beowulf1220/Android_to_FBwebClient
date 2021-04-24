@@ -62,7 +62,7 @@ void draw(){
   {
     text("Player " + numberPlayer + " AcelerometroY: "+nfp(accelerometerY, 1, 3),0,50,width,height/2);
     fire.setValue("Pong/Player"+numberPlayer+"/available","0");
-    fire.setValue("Pong/Player"+numberPlayer+"/aceleration",String.valueOf(accelerometerY);
+    fire.setValue("Pong/Player"+numberPlayer+"/aceleration",String.valueOf(accelerometerY));
   }
   else{
     text("Select a player",0,50,width,height/2);
