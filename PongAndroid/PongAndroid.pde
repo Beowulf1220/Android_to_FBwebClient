@@ -12,20 +12,18 @@ String remoteAddress = "192.168.1.76";
 
 byte window;
 
-boolean player1Enabled;
-boolean player2Enabled;
+int player1Enabled;
+int player2Enabled;
 
-int player = 0;
-String selectText;
-int score;
+Player player;
 
 void setup() {
-  
-  selectText = "Select a player";
-  player1Enabled = false;
-  player1Enabled = false;
+
+  player1Enabled = 0;
+  player2Enabled = 0;
+  myAccelerometerY = 0;
   window = 0;
-  score = 0;
+  player = null;
   
   sensor = new KetaiSensor(this);
   orientation(PORTRAIT);
@@ -52,13 +50,16 @@ void mainMenu(){
   
   //select text
   fill(255);
-  text(selectText, width/2, height/6);
+  text("Select a player", width/2, height/6);
+  
+  println("Player 1: "+player1Enabled);
+  println("Player 2: "+player1Enabled);
   
   //Button 1
   fill(255);
   rect(width/2,height/2-200,width/1.5,200); //Border
   
-  if(player1Enabled)
+  if(player1Enabled == 1)
   {
     fill(0);
     rect(width/2,height/2-200,width/1.5-5,200-5);
@@ -77,12 +78,12 @@ void mainMenu(){
   fill(255);
   rect(width/2,height/2+200,width/1.5,200); //Border
   
-  if(player2Enabled)
+  if(player2Enabled == 1)
   {
     fill(0);
     rect(width/2,height/2+200,width/1.5-5,200-5);
     fill(0,255,0);
-    text("Player 2", width/2,height/2+180);
+    text("Player 2", width/2,height/2+200);
   }
   else
   {
@@ -94,11 +95,12 @@ void mainMenu(){
 }
 
 void play(){
-  text("Player " + player + " score: "+score, width/2, 10);
+  text("Player " + player.getNumberPlayer() + " score: "+player.getScore(), width/2, 50);
   text("Accelerometer Y: " + nfp(myAccelerometerY, 1, 3), width/2, height/2);
 
   OscMessage myMessage = new OscMessage("accelerometerData");
   myMessage.add(myAccelerometerY);
+  myMessage.add(player.getNumberPlayer());
   oscP5.send(myMessage, remoteLocation);
 }
 
@@ -115,20 +117,28 @@ void initNetworkConnection()
   remoteLocation = new NetAddress(remoteAddress, 12000);
 }
 
-void mousePressed() {
-  if(window==0){
+void oscEvent(OscMessage theOscMessage) {
+  player1Enabled = theOscMessage.get(0).intValue();
+  player2Enabled = theOscMessage.get(1).intValue();
+  if(player != null) player.setScore(theOscMessage.get(2).intValue());
+}
+
+void mousePressed()
+{
+  if(window==0)
+  {
     //Button 1 Event 
     if((mouseX >=  width/2-(width/1.5)/2 && mouseX <= width/2+(width/1.5)/2) &&
        ((mouseY >= height/2-300) && (mouseY <= height/2-100)))
     {
-      player = 1;
+      player = new Player(1);
       window = 1;
     }
     //Button 2 Event
     else if((mouseX >=  width/2-(width/1.5)/2 && mouseX <= width/2+(width/1.5)/2) &&
-       ((mouseY >= height/2+300) && (mouseY <= height/2+100)))
+       ((mouseY >= height/2+100) && (mouseY <= height/2+300)))
     {
-      player = 2;
+      player = new Player(2);
       window = 1;
     }
   }
