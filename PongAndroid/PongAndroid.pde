@@ -2,6 +2,8 @@ import netP5.*;
 import oscP5.*;
 import ketai.net.*;
 import ketai.sensors.*;
+import android.os.Bundle;
+import android.view.WindowManager;
 
 OscP5 oscP5;
 KetaiSensor sensor;
@@ -126,17 +128,23 @@ void mousePressed()
   {
     //Button 1 Event 
     if((mouseX >=  width/2-(width/1.5)/2 && mouseX <= width/2+(width/1.5)/2) &&
-       ((mouseY >= height/2-300) && (mouseY <= height/2-100)))
+       ((mouseY >= height/2-300) && (mouseY <= height/2-100)) && player1Enabled == 1)
     {
       player = new Player(1);
       window = 1;
     }
     //Button 2 Event
     else if((mouseX >=  width/2-(width/1.5)/2 && mouseX <= width/2+(width/1.5)/2) &&
-       ((mouseY >= height/2+100) && (mouseY <= height/2+300)))
+       ((mouseY >= height/2+100) && (mouseY <= height/2+300)) && player2Enabled == 1)
     {
       player = new Player(2);
       window = 1;
     }
   }
+}
+
+//Keep screen awake
+void onCreate(Bundle bundle){
+  super.onCreate(bundle);
+  getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 }
