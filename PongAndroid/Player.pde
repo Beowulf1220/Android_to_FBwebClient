@@ -11,12 +11,6 @@ class Player{
     score = 0;
   }
   
-  //Builder
-  Player(){
-    this.numberPlayer = 0;
-    score = 0;
-  }
-  
   //Get methods
   int getNumberPlayer(){
     return numberPlayer;

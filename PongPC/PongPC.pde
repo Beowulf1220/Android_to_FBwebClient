@@ -27,6 +27,12 @@ void setup() {
   oscP5 = new OscP5(this, 12000, OscP5.UDP);
   remoteLocation = new NetAddress("192.168.1.74", 12000); //IP Android
   fire = new P5ireBase(this, "https://temp-804eb-default-rtdb.firebaseio.com/");
+  
+  fire.setValue("Pong/Player1/available","1");
+  fire.setValue("Pong/Player2/available","1");
+  
+  fire.setValue("Pong/Player1/aceleration","0");
+  fire.setValue("Pong/Player2/aceleration","0");
 }
 
 void draw(){
@@ -55,7 +61,8 @@ void draw(){
   if(numberPlayer != 0)
   {
     text("Player " + numberPlayer + " AcelerometroY: "+nfp(accelerometerY, 1, 3),0,50,width,height/2);
-    fire.setValue("Pong/Player1/available","0");
+    fire.setValue("Pong/Player"+numberPlayer+"/available","0");
+    fire.setValue("Pong/Player"+numberPlayer+"/aceleration",String.valueOf(accelerometerY);
   }
   else{
     text("Select a player",0,50,width,height/2);

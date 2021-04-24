@@ -52,9 +52,6 @@ void mainMenu(){
   fill(255);
   text("Select a player", width/2, height/6);
   
-  println("Player 1: "+player1Enabled);
-  println("Player 2: "+player1Enabled);
-  
   //Button 1
   fill(255);
   rect(width/2,height/2-200,width/1.5,200); //Border
@@ -83,7 +80,7 @@ void mainMenu(){
     fill(0);
     rect(width/2,height/2+200,width/1.5-5,200-5);
     fill(0,255,0);
-    text("Player 2", width/2,height/2+200);
+    text("Player 2", width/2,height/2+205);
   }
   else
   {
