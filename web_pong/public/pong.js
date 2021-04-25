@@ -15,8 +15,13 @@ player1Aceleration.on('value', (snap) => {
   p1a = parseFloat(snap.val());
 });
 
+player2Aceleration.on('value', (snap) => {
+  p2a = parseFloat(snap.val());
+});
+
 //info
-let info = document.getElementById("info");
+let info1 = document.getElementById("info1");
+let info2 = document.getElementById("info2");
 
 // load sounds
 let hit = new Audio();
@@ -57,7 +62,7 @@ const player2 = {
     width : 10,
     height : 100,
     score : 0,
-    color : "WHITE"
+    color : "purple"
 }
 
 // NET
@@ -134,6 +139,7 @@ function update(){
 
 	let rect = canvas.getBoundingClientRect();
     player1.y = (p1a * 100) + rect.top - player1.height/2;
+    player2.y = (p1a * 100) + rect.top - player2.height/2;
 
     // change the score of players, if the ball goes to the left "ball.x<0" computer win, else if "ball.x > canvas.width" the user win
     if( ball.x - ball.radius < 0 ){
@@ -152,7 +158,7 @@ function update(){
 
     // computer plays for itself, and we must be able to beat it
     // simple AI
-    player2.y += ((ball.y - (player2.y + player2.height/2)))*0.1;
+    //player2.y += ((ball.y - (player2.y + player2.height/2)))*0.1;
 
     // when the ball collides with bottom and top walls we inverse the y velocity.
     if(ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height){
@@ -216,7 +222,8 @@ function render(){
 function game(){
     update();
     render();
-    info.innerHTML = `Player 1: ${p1a}`;
+    info1.innerHTML = `Player 1: ${p1a}`;
+    info2.innerHTML = `Player 2: ${p2a}`;
 }
 // number of frames per second
 let framePerSecond = 50;
