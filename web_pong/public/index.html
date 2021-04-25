@@ -1,36 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Pong Game JavaScript</title>
-    <link rel="stylesheet" href="css/style.css">
-    
+	<meta charset="UTF-8">
+	<title>MENU PONG</title>
+	<link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-	<h1 id="info1"></h1>
-	<h1 id="info2"></h1>
-   <canvas id="pong" width="800" height="600"></canvas>
-
-   <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!--Iniciamos el servicio de firebase-->
-    <script src="https://www.gstatic.com/firebasejs/5.5.3/firebase.js"></script>
-    <script>
-          	// Initialize Firebase
-          	var config = {
-		    	apiKey: "AIzaSyCoYy4kuIHpnEITIwKpVhSJ3ydMVKtarVE",
-		    	authDomain: "temp-804eb.firebaseapp.com",
-			    databaseURL: "https://temp-804eb-default-rtdb.firebaseio.com",
-			    projectId: "temp-804eb",
-			    storageBucket: "temp-804eb.appspot.com",
-			    messagingSenderId: "1093299270863",
-			    appId: "1:1093299270863:web:c8629d94ab9132c38633ba",
-			    measurementId: "G-LDGLLSWGTF"
-		  	};
-          	firebase.initializeApp(config);
-    </script>
-
-   <script src="pong.js"></script>
+  <header>
+    <nav class="navegacion">
+      <ul class="menu">
+        <li><a href="pong.html">Opcion Cliente</a></li>
+        <li><a href="pong.html">Opcion Servidor</a></li>
+        <li><a href="#">About us</a>
+          <ul class="submenu">
+            <li>Nombre: Edwin Alfredo Pinedo Chacón</a></li>
+            <li>Matricula: 329549</a></li>
+            <li>Nombre: Hugo Edibray Becerra Gandara</a></li>
+            <li>Matricula: 329532</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Acerca de la materia</a>
+            <ul class="submenu2">
+                <li>Docente: Fernando Martinez Reyes</a></li>
+                <li>Nombre de la materia: Desarrollo Basado en Plataformas</a></li>
+                <li>Universidad Autonoma de Chihuahua, Campus 2</a></li>
+            </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
 </body>
-</html>
