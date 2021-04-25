@@ -24,15 +24,18 @@ let info1 = document.getElementById("info1");
 let info2 = document.getElementById("info2");
 
 // load sounds
-let hit = new Audio();
-let wall = new Audio();
-let player1Score = new Audio();
-let player2Score = new Audio();
+let background = new Audio();
+background.src = "sounds/background.mp3"
 
-hit.src = "sounds/hit.mp3";
-wall.src = "sounds/wall.mp3";
-player1Score.src = "sounds/comScore.mp3";
-player2Score.src = "sounds/userScore.mp3";
+let hitPlayer1 = new Audio();
+let hitPlayer2 = new Audio();
+let wall = new Audio();
+let scoreSound = new Audio();
+
+hitPlayer1.src = "sounds/HitPlayer1.mp3";
+hitPlayer2.src = "sounds/HitPlayer2.mp3";
+wall.src = "sounds/Wall.mpeg";
+scoreSound.src = "sounds/scoreSound.mpeg";
 
 // Ball object
 const ball = {
@@ -52,7 +55,7 @@ const player1 = {
     width : 10,
     height : 100,
     score : 0,
-    color : "GREEN"
+    color : "LIME"
 }
 
 // COM Paddle
@@ -62,7 +65,7 @@ const player2 = {
     width : 10,
     height : 100,
     score : 0,
-    color : "purple"
+    color : "RED"
 }
 
 // NET
@@ -71,7 +74,7 @@ const net = {
     y : 0,
     height : 10,
     width : 2,
-    color : "BLUE"
+    color : "WHITE"
 }
 
 // draw a rectangle, will be used to draw paddles
@@ -88,16 +91,7 @@ function drawArc(x, y, r, color){
     ctx.closePath();
     ctx.fill();
 }
-/*
-// listening to the mouse
-canvas.addEventListener("mousemove", getPlayersPos);
 
-function getPlayersPos(){
-    let rect = canvas.getBoundingClientRect();
-    player1.y = (p1a * 100) + rect.top - player1.height/2;
-}*/
-
-// when COM or USER scores, we reset the ball
 function resetBall(){
     ball.x = canvas.width/2;
     ball.y = canvas.height/2;
@@ -144,12 +138,14 @@ function update(){
     // change the score of players, if the ball goes to the left "ball.x<0" computer win, else if "ball.x > canvas.width" the user win
     if( ball.x - ball.radius < 0 ){
         player2.score++;
-        player2Score.play();
+        scoreSound.play();
         resetBall();
+        firebase.database().ref('Pong/Player1').update({score: player1.score});
     }else if( ball.x + ball.radius > canvas.width){
         player1.score++;
-        player1Score.play();
+        scoreSound.play();
         resetBall();
+        firebase.database().ref('Pong/Player2').update({score: player2.score});
     }
 
     // the ball has a velocity
@@ -172,7 +168,7 @@ function update(){
     // if the ball hits a paddle
     if(collision(ball,player)){
         // play sound
-        hit.play();
+        hitPlayer1.play();
         // we check where the ball hits the paddle
         let collidePoint = (ball.y - (player.y + player.height/2));
         // normalize the value of collidePoint, we need to get numbers between -1 and 1.
@@ -199,7 +195,7 @@ function update(){
 function render(){
 
     // clear the canvas
-    drawRect(0, 0, canvas.width, canvas.height, "#000");
+    drawRect(0, 0, canvas.width, canvas.height, "#3498db");
 
     // draw the user score to the left
     drawText(player1.score,canvas.width/4,canvas.height/5);
@@ -222,8 +218,13 @@ function render(){
 function game(){
     update();
     render();
+    firebase.database().ref('Pong/Player1').update({score:player1.score});
+    firebase.database().ref('Pong/Player2').update({score:player2.score});
+    firebase.database().ref('Pong/Ball').update({posX:ball.x});
+    firebase.database().ref('Pong/Ball').update({posY:ball.y});
     info1.innerHTML = `Player 1: ${p1a}`;
     info2.innerHTML = `Player 2: ${p2a}`;
+    background.play();
 }
 // number of frames per second
 let framePerSecond = 50;
