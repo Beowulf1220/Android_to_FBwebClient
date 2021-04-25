@@ -19,6 +19,14 @@ player2Aceleration.on('value', (snap) => {
   p2a = parseFloat(snap.val());
 });
 
+firebase.database().ref("Pong").child("Ball").child("posX").on('value', (snap) => {
+  ball.x = parseFloat(snap.val());
+});
+
+firebase.database().ref("Pong").child("Ball").child("posY").on('value', (snap) => {
+  ball.y = parseFloat(snap.val());
+});
+
 //info
 let info1 = document.getElementById("info1");
 let info2 = document.getElementById("info2");
@@ -133,7 +141,7 @@ function update(){
 
 	let rect = canvas.getBoundingClientRect();
     player1.y = (p1a * 100) + rect.top - player1.height/2;
-    player2.y = (p1a * 100) + rect.top - player2.height/2;
+    player2.y = (p2a * 100) + rect.top - player2.height/2;
 
     // change the score of players, if the ball goes to the left "ball.x<0" computer win, else if "ball.x > canvas.width" the user win
     if( ball.x - ball.radius < 0 ){
@@ -143,10 +151,6 @@ function update(){
         scoreSound.play();
         resetBall();
     }
-
-    // the ball has a velocity
-    ball.x = firebase.database().ref("Pong").child("Ball").child("posX");
-	ball.y = firebase.database().ref("Pong").child("Ball").child("posY");
 
     // when the ball collides with bottom and top walls we inverse the y velocity.
     if(ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height){

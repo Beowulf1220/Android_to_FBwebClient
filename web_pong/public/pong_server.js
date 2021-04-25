@@ -133,7 +133,7 @@ function update(){
 
 	let rect = canvas.getBoundingClientRect();
     player1.y = (p1a * 100) + rect.top - player1.height/2;
-    player2.y = (p1a * 100) + rect.top - player2.height/2;
+    player2.y = (p2a * 100) + rect.top - player2.height/2;
 
     // change the score of players, if the ball goes to the left "ball.x<0" computer win, else if "ball.x > canvas.width" the user win
     if( ball.x - ball.radius < 0 ){
